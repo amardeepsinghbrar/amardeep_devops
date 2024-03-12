@@ -118,11 +118,11 @@ resource "aws_codebuild_project" "my_codebuild_project" {
     }
     environment_variable {
       name  = "IMAGE_REPO_NAME"
-      value = ""
+      value = "ecr-prod"
     }
     environment_variable {
       name  = "IMAGE_TAG"
-      value = ""
+      value = "Latest"
     }
   }
 }
