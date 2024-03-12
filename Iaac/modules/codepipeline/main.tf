@@ -92,7 +92,7 @@ resource "aws_iam_role_policy" "code_pipeline_service_policy" {
 resource "aws_codebuild_project" "my_codebuild_project" {
   name          = var.build_project_name
   description   = var.build_project_description
-  service_role = aws_iam_role.example.arn
+  service_role = aws_iam_role.code_pipeline_service_iam_role.arn
 
   source {
     type = var.git_platform
