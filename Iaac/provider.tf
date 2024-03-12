@@ -1,10 +1,9 @@
 terraform {
     backend "s3" {
-        bucket                      = var.s3_terraform_state_store_bucket
-        key                         = "${var.environment}/terraform.tfstate"
-        region                      = var.region
-        dynamodynamodb_table        = var.dynamodynamodb_table
-        profile                     = var.profile
+        bucket                      = "mys3bucket-terraform"
+        key                         = "prod/terraform.tfstate"
+        dynamodynamodb_table        = "terraform-lock"
+        
         }
 
     required_providers {
@@ -16,6 +15,6 @@ terraform {
   }
 
 provider "aws" {
-  region = var.region
-  profile = var.profile
+  region = "us-east-1"
+  profile = "default"
 }
