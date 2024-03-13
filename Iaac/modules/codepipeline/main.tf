@@ -47,6 +47,16 @@ data "aws_iam_policy_document" "code_pipeline_service_policy_document" {
 
     resources = ["*"]
   }
+  
+  statement {
+    effect = "Allow"
+
+    actions = [
+        "eks:DescribeCluster",
+    ]
+
+    resources = ["*"]
+  }
   statement {
     effect = "Allow"
 
