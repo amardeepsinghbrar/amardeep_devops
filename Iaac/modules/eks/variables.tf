@@ -14,13 +14,13 @@ variable "eks_cluster_version" {
     type = string
     description = "eks_cluster_version"
 }
-variable "cidr_private_subnet1" {
+variable "cidr_private_subnet1_id" {
     type = string
-    description = "cidr_public_subnet1"
+    description = "cidr_private_subnet1_id"
 }
-variable "cidr_private_subnet2" {
+variable "cidr_private_subnet2_id" {
     type = string
-    description = "cidr_public_subnet2"
+    description = "cidr_private_subnet2_id"
 }
 variable "tags" {
     type = map(string)

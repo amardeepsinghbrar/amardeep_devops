@@ -20,8 +20,8 @@ module "eks" {
   }
 
   vpc_id                   = var.vpc_id
-  subnet_ids               = [var.cidr_private_subnet1, var.cidr_private_subnet2]
-  control_plane_subnet_ids = [var.cidr_private_subnet1, var.cidr_private_subnet2]
+  subnet_ids               = [var.cidr_private_subnet1_id, var.cidr_private_subnet2_id]
+  control_plane_subnet_ids = [var.cidr_private_subnet1_id, var.cidr_private_subnet2_id]
 
   # EKS Managed Node Group(s)
   eks_managed_node_group_defaults = {

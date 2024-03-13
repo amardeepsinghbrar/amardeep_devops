@@ -55,8 +55,8 @@ module "eks_cluster" {
   vpc_cidr_block                    = var.vpc_cidr
   eks_cluster_name                  = var.eks_cluster_name
   eks_cluster_version               = var.eks_cluster_version
-  cidr_private_subnet1              = var.cidr_private_subnet1
-  cidr_private_subnet2              = var.cidr_private_subnet2
+  cidr_private_subnet1_id           = module.my_vpc.private_subnet1
+  cidr_private_subnet2_id           = module.my_vpc.private_subnet2
   tags = var.tags
 
 }
