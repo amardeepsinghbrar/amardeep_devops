@@ -1,0 +1,102 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: webapp
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-express-server-rest-api
+  namespace: webapp
+  labels:
+    app: node-express-server-rest-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: node-express-server-rest-api
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: node-express-server-rest-api
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                - amd64
+                - arm64
+      containers:
+      - name: nginx
+        image: 590995038815.dkr.ecr.us-east-1.amazonaws.com/ecr-prod:Latest
+        ports:
+        - name: http
+          containerPort: 3000
+        imagePullPolicy: IfNotPresent
+        readinessProbe:
+          failureThreshold: 2
+          httpGet:
+            path: /messages
+            port: 3000
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: "100m"
+            memory: "500Mi"
+          requests:
+            cpu: "20m"
+            memory: "150Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-express-server-rest-api-svc
+  namespace: webapp
+spec:
+  ports:
+  - name: http
+    nodePort: 31338
+    port: 80
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: node-express-server-rest-api
+  type: NodePort
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: node-express-server-rest-api-ing
+  namespace: webapp
+  annotations:
+    alb.ingress.kubernetes.io/backend-protocol: HTTP
+    alb.ingress.kubernetes.io/healthcheck-path: /messages
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: instance
+    alb.ingress.kubernetes.io/subnets: subnet-0463bc22fb504a0a3, subnet-0a1e948fbda7e3a67
+    kubernetes.io/ingress.class: alb
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: node-express-server-rest-api-svc
+            port:
+              number: 80
+        path: /*
+        pathType: ImplementationSpecific
