@@ -57,7 +57,8 @@ module "eks_cluster" {
   eks_cluster_version               = var.eks_cluster_version
   cidr_private_subnet1_id           = module.my_vpc.private_subnet1
   cidr_private_subnet2_id           = module.my_vpc.private_subnet2
-  tags = var.tags
+  tags                              = var.tags
+  iam_role_to_be_whitelisted        = module.my_codepipeline.code_build_iam_role_arn
 
 }
 module "alb_controller" {

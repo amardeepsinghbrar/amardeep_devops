@@ -26,3 +26,7 @@ variable "tags" {
     type = map(string)
     description = "tags"
 }
+variable "iam_role_to_be_whitelisted" {
+    type = string
+    description = "iam_role_to_be_whitelisted"
+}

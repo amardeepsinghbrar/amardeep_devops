@@ -48,22 +48,22 @@ module "eks" {
   # To add the current caller identity as an administrator
   enable_cluster_creator_admin_permissions = true
 
-  # access_entries = {
-  #   # One access entry with a policy associated
-  #   example = {
-  #     kubernetes_groups = []
-  #     principal_arn     = "arn:aws:iam::123456789012:role/something"
+  access_entries = {
+    # One access entry with a policy associated
+    example = {
+      kubernetes_groups = []
+      principal_arn     = var.iam_role_to_be_whitelisted
 
-  #     policy_associations = {
-  #       example = {
-  #         policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSViewPolicy"
-  #         access_scope = {
-  #           namespaces = ["default"]
-  #           type       = "namespace"
-  #         }
-  #       }
-  #     }
-  #   }
-  #}
+      policy_associations = {
+        example = {
+          policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSEditPolicy"
+          access_scope = {
+            namespaces = ["*"]
+            type       = "namespace"
+          }
+        }
+      }
+    }
+  }
   cluster_tags = var.tags
 }
