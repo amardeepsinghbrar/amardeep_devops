@@ -32,5 +32,5 @@ build_project_name                  = "amardeep_assignment"
 build_project_description           = "To build node.js project"
 
 # ----------------------EKS-----------------------
-eks_cluster_name                    = "ecr-prod"
+eks_cluster_name                    = "prod-eks"
 eks_cluster_version                 = "1.29"

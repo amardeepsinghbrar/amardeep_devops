@@ -70,7 +70,15 @@ resource "aws_internet_gateway" "my_igw" {
 }
 
 # Create route table for public subnets
-resource "aws_route_table" "public_route_table" {
+resource "aws_route_table" "public_route_table1" {
+  vpc_id = aws_vpc.my_vpc.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.my_igw.id
+  }
+}
+resource "aws_route_table" "public_route_table2" {
   vpc_id = aws_vpc.my_vpc.id
 
   route {
@@ -82,21 +90,39 @@ resource "aws_route_table" "public_route_table" {
 # Associate public subnets with the public route table
 resource "aws_route_table_association" "public_subnet1_association" {
   subnet_id      = aws_subnet.public_subnet1.id
-  route_table_id = aws_route_table.public_route_table.id
+  route_table_id = aws_route_table.public_route_table1.id
 }
 
 resource "aws_route_table_association" "public_subnet2_association" {
   subnet_id      = aws_subnet.public_subnet2.id
-  route_table_id = aws_route_table.public_route_table.id
+  route_table_id = aws_route_table.public_route_table2.id
 }
 
 # Create NAT gateway and route table for private subnets
+resource "aws_eip" "nat-gateway-eip" {
+  vpc = true
+}
 resource "aws_nat_gateway" "my_nat_gateway" {
-  allocation_id = aws_subnet.public_subnet1.id 
-  subnet_id     = aws_subnet.private_subnet1.id
+  depends_on = [ aws_eip.nat-gateway-eip ]
+
+  allocation_id = aws_eip.nat-gateway-eip.id
+  subnet_id     = aws_subnet.public_subnet1.id
+  tags = {
+    Name = "${var.vpc_name}-nat-gateway"
+  }
 }
 
-resource "aws_route_table" "private_route_table" {
+resource "aws_route_table" "private_route_table1" {
+  depends_on = [ aws_nat_gateway.my_nat_gateway ]
+  vpc_id = aws_vpc.my_vpc.id
+
+  route {
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.my_nat_gateway.id
+  }
+}
+resource "aws_route_table" "private_route_table2" {
+  depends_on = [ aws_nat_gateway.my_nat_gateway ]
   vpc_id = aws_vpc.my_vpc.id
 
   route {
@@ -108,12 +134,12 @@ resource "aws_route_table" "private_route_table" {
 # Associate private subnets with the private route table
 resource "aws_route_table_association" "private_subnet1_association" {
   subnet_id      = aws_subnet.private_subnet1.id
-  route_table_id = aws_route_table.private_route_table.id
+  route_table_id = aws_route_table.private_route_table1.id
 }
 
 resource "aws_route_table_association" "private_subnet2_association" {
   subnet_id      = aws_subnet.private_subnet2.id
-  route_table_id = aws_route_table.private_route_table.id
+  route_table_id = aws_route_table.private_route_table2.id
 }
 
 
