@@ -84,3 +84,11 @@ variable "environment" {
     type = string
     description = "environment"
 }
+variable "eks_cluster_name" {
+    type = string
+    description = "eks_cluster_name"
+}
+variable "eks_cluster_version" {
+    type = string
+    description = "eks_cluster_version"
+}

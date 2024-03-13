@@ -31,3 +31,6 @@ git_repo_url                        = "https://github.com/amardeepsinghbrar/amar
 build_project_name                  = "amardeep_assignment"
 build_project_description           = "To build node.js project"
 
+# ----------------------EKS-----------------------
+eks_cluster_name                    = "ecr-prod"
+eks_cluster_version                 = "1.29"
